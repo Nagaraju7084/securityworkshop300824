@@ -1,6 +1,4 @@
-create database medilab_users;
-
-use medilab_users;
+`medilab_preclinic`;
 
 CREATE TABLE `users` (
 `id` INT NOT NULL AUTO_INCREMENT,

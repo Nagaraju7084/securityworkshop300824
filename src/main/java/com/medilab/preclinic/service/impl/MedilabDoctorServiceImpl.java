@@ -3,7 +3,6 @@
  */
 package com.medilab.preclinic.service.impl;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,17 +10,14 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.medilab.preclinic.bean.DoctorBean;
-import com.medilab.preclinic.bean.UserRoleBean;
 import com.medilab.preclinic.model.Address;
 import com.medilab.preclinic.model.Department;
 import com.medilab.preclinic.model.Doctor;
 import com.medilab.preclinic.model.MedilabUser;
-import com.medilab.preclinic.model.MedilabUserType;
 import com.medilab.preclinic.repo.AddressRepo;
 import com.medilab.preclinic.repo.DepartmentRepo;
 import com.medilab.preclinic.repo.DoctorRepo;
@@ -45,13 +41,7 @@ public class MedilabDoctorServiceImpl implements MedilabDoctorService {
 	@Autowired
 	private MediUserRepository userRepo;
 	
-	/*
-	 * @Autowired private UserRoleService roleService;
-	 */
 	
-	@Autowired
-	private PasswordEncoder pwdEncoder;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -59,13 +49,11 @@ public class MedilabDoctorServiceImpl implements MedilabDoctorService {
 	 * preclinic.bean.DoctorBean)
 	 */
 	@Override
-	@PreAuthorize("hasPermission('doctor','CREATE')")
 	public DoctorBean save(DoctorBean doctBean) {
 		Doctor doctModel = new Doctor();
 		Address addrModel = new Address();
 		BeanUtils.copyProperties(doctBean, addrModel);
 		BeanUtils.copyProperties(doctBean, doctModel);
-		doctModel.setPassword(pwdEncoder.encode(doctBean.getPassword()));
 
 		doctModel.setAddress(addrModel);
 
@@ -176,7 +164,6 @@ public class MedilabDoctorServiceImpl implements MedilabDoctorService {
 	 * preclinic.bean.DoctorBean)
 	 */
 	@Override
-	@PreAuthorize("hasPermission('Doctor','MODIFY')")
 	public DoctorBean update(DoctorBean doctBean) {
 		Doctor doctModel = new Doctor();
 		// Address addrModel = new Address();
@@ -204,7 +191,6 @@ public class MedilabDoctorServiceImpl implements MedilabDoctorService {
 
 		MedilabUser userDomain = new MedilabUser();
 		BeanUtils.copyProperties(userBean, userDomain);
-		userDomain.setPassword(pwdEncoder.encode(userBean.getPassword()));
 
 		return userDomain;
 	}

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -11,7 +12,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	protected void configure(HttpSecurity http) throws Exception { //configure(HttpSecurity http) is used to define the urls to be protected
+		//and define the authentication methods and also to define the various application artifacts such as cors to be enable
 		http.authorizeRequests()
 		.antMatchers("/").permitAll() //this will allow all urls to access meaning without security
 		.antMatchers("/dashboard").authenticated() //should be authenticate
@@ -28,7 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	//AuthenticationManagerBuilder will build the AuthenticationManager
 	//AuthenticationManager will be implemented by the AuthenticationProvider 
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception { //is used to build mostly for the custom authenticationprovider and custom userdetailsmanager, inmemoryuserdetailsmanager
+		//AuthenticationManagerBuilder is used to build the AuthenticationManager, that AuthenticationManager will provides the Authentication details to the AuthenticationProvider
+		//AuthenticationManagerBuilder is also used to define the UserDetailsManager to create the users schema
 		auth.inMemoryAuthentication() //this inmemoryuserdetailsmanager take all these users and calling the userdetails => createuser
 		//inMemoryAuthentication() => InMemoryUserDetailsManagerConfigurer => InMemoryUserDetailsManager => createUser
 		//createUser(UserDetails user) = given user details
@@ -46,6 +50,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.passwordEncoder(NoOpPasswordEncoder.getInstance()); // not recommended to use
 		//NoOpPasswordEncoder use to not to encode the passwords what we will enter, keep as is
 		//while storing the users into inmemory db
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception { //to static resources should have to be unsecure
+		web.ignoring().antMatchers("/assets/**"); //this configure(WebSecurity web) is mostly used for ignoring the security check on the static resources
 	}
 }
 

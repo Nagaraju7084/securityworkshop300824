@@ -32,21 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		/*auth.inMemoryAuthentication()
-		.withUser("admin").password("admin").authorities("admin")
-		.and()
-		.withUser("user").password("user").authorities("user");*/
-
-		//jdbcauthentication
-		//if we configure the AuthenticationManagerBuilder with the jdbcAuthentication, that jdbcAuthenticationmanager internally will use the
-		//userdetails as the JdbcUserDetailsManager
-		//AuthenticationManager will use jdbcauthenticationprovider, jdbcauthenticationprovider will use this JdbcUserDetailsManager
-		//JdbcUserDetailsManager will excepting the users and authorities tables
-		//the below boolean values for the users table's enable column values
-		// 0 - disable
-		// 1 - enable
-		// /resources/sql/scripts.sql => run this scripts in sql editor of the mysql work bench
-		//so, required tables were created i.e. users table and authorities table which are expected by the JdbcUserDetailsManager
 		auth.jdbcAuthentication().dataSource(dataSource);
 	}
 	@Bean

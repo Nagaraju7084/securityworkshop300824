@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -34,12 +35,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//finally the users are added into the user map
 		.withUser("admin").password("admin").authorities("admin") //our own user store using in memory
 		.and()
-		.withUser("user").password("user").authorities("user");
+		.withUser("user").password("user").authorities("user")
 		//if we run the application, we will get the exception as : java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id "null"
 		//because AuthenticationProvider will verify the password what we are enter with the password present in UserDetailsService using PasswordEncoder
 		//this PasswordEncoder used by the AuthenticationProvider
 		//that is the reason, while authenticating, AuthenticationProvider have not found any
 		//PasswordEncoder, and hence we got the PasswordEncoder error here
+		//configure PasswordEncoder
+		.and()
+		.passwordEncoder(NoOpPasswordEncoder.getInstance()); // not recommended to use
+		//NoOpPasswordEncoder use to not to encode the passwords what we will enter, keep as is
+		//while storing the users into inmemory db
 	}
 }
 

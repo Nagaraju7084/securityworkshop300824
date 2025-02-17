@@ -40,6 +40,9 @@ public class MedilabDoctorServiceImpl implements MedilabDoctorService {
 
 	@Autowired
 	private MediUserRepository userRepo;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	
 	/*
@@ -54,6 +57,7 @@ public class MedilabDoctorServiceImpl implements MedilabDoctorService {
 		Address addrModel = new Address();
 		BeanUtils.copyProperties(doctBean, addrModel);
 		BeanUtils.copyProperties(doctBean, doctModel);
+		doctModel.setPassword(passwordEncoder.encode(doctBean.getPassword()));
 
 		doctModel.setAddress(addrModel);
 
@@ -191,6 +195,7 @@ public class MedilabDoctorServiceImpl implements MedilabDoctorService {
 
 		MedilabUser userDomain = new MedilabUser();
 		BeanUtils.copyProperties(userBean, userDomain);
+		userDomain.setPassword(passwordEncoder.encode(userBean.getPassword()));
 
 		return userDomain;
 	}

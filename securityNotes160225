@@ -162,3 +162,56 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/assets/**");
 	}
 }
+
+passwordmanagement :
+daoauthenticationprovider is the default authenticationprovider will have a retrieveUser(--) method through this, it will
+retrieve the userdetails from the database based on the username that we have supplied throught the form
+once this retrieveUser(--) is successful, then it will create authentication response object by using the method called
+createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user)
+
+=============
+password security :
+encoding : we will do the conversion from one form to the another
+there is no salting, no cryptography, no aes algorithm, etc
+any one can easily decode if we use the encoded string
+this is do not use, not suggestible
+encoding is useful for compress files(zip files)
+encryption : 2 types
+symmetric : the data will be encrypted with some key know to only server which is generating the encryption
+single secrete key is used for encrypt and decrypt
+ex : jwt token
+asymmetric : two keys : public and private keys are used
+certificate based authentication will be the best example for this asymmetric algorithm
+https://developer.hashicorp.com/vault/tutorials/pki/pki-engine
+read that hashicorp tutorial
+
+root certificate self signed certificate contains private key
+intermediate certificate contains the signature of the root certificate, signed intermediate certificate private key and save the generated certificate as .pem i.e. a public key is generating that public key is signed with the private key of the root certificate
+intermediate certificate contains the both the things i.e. private certificate and public certificate that means private key of the root certificate plus public certificate that is able to exchange with any one
+for ex : medi.ex.com
+we can create a certificate which contains a public key i.e. application contains a public key will be exchanged to the pki(public key infrastructure registry) contains the certificate(public key + private key)
+public key should same with the public key of the intermediate certificate
+application’s certificate public key = intermediate certificate public key then the authentication is success
+tls and ssl designed using asymmetric authentication
+hashing : nothing but compressing the data, hashing is a technique which is used to converting the data using some hashing functions having to take string or text then run for various iterations, compress our text
+ex : md5, shah256 => non breakable
+shah256 = plain text to encrypted text
+md5 = to generate shah256 strength is unbreakable
+in the hasing there is no revers process
+once string is generated/hashed, we can’t reverse it
+cryptography properties :
+confidentiality : shouldn’t be breakable
+integrity : double layer checking
+authenticity : should be happened with the streangthen password
+spring security provided the password encoder those encoders will use the hashing techniques
+jwt generators will use the symmetric encryption
+tls encryption of type asymmetric
+spring security password encoders that will encode the data and hash the data but won’t encrypt the data
+shah1 length < shah256 length < shah512 length
+salt = random string
+pbkdf2 = password based key derivation function 2
+hmac = hash message authentication code
+
+daoauthenticationprovider is getting the userdetails from the database and checking whether
+this password is encodedpassword and mathcing the incoming password(that we entered) is equals to the
+hashed string or not with the help of the matches(--) of the encoder

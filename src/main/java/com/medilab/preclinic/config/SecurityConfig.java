@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
@@ -41,16 +42,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.jdbcAuthentication().dataSource(dataSource);
 	}*/
 	//we can configure userdetailsmanager in another way such that without authenticationmanagerbuilder, we can configure
+	//authenticationmanager will take the authentication request, that request gives to the authenticationprovider(default provider is daoauthenticationprovider)
+	//that daoauthenticationprovider will use the userdetailsservice what we have exposed here and also use the passwordencoder
+	//by using these two things, the authenticationprovder will take the decision whether the user is loggedin or not
 	@Bean
 	public UserDetailsService userDetailsService(){
-		InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
+		//inmemory
+		/*InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
 		UserDetails user1 = new User("admin", "admin", Arrays.asList(new SimpleGrantedAuthority("admin")));
 		UserDetails user2 = new User("user", "user", Arrays.asList(new SimpleGrantedAuthority("user")));
 
 		inMemoryUserDetailsManager.createUser(user1);
 		inMemoryUserDetailsManager.createUser(user2);
 
-		return inMemoryUserDetailsManager;
+		return inMemoryUserDetailsManager;*/
+
+		//jdbc
+		JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+		return jdbcUserDetailsManager;
+
+		//upto here we have done usermanagement
+		//cognito is the idp like wso2, keyclock
 	}
 	@Bean
 	public PasswordEncoder passwordEncoder(){

@@ -215,3 +215,27 @@ hmac = hash message authentication code
 daoauthenticationprovider is getting the userdetails from the database and checking whether
 this password is encodedpassword and mathcing the incoming password(that we entered) is equals to the
 hashed string or not with the help of the matches(--) of the encoder
+
+===================230225
+
+so far, we are using jdbcuserdetailsmanager or jdbcauthenticationmanager, either of the cases jdbcuserdetailsmanager is expecting the
+user details to be retreived from a perticular table that table also should be in a format of what the jdbcuserdetailsmanager is expecting
+
+what if the case if we have our own database, may be some applications already there where they don't have th security
+but they have the usermanagement system in place, using that usermanagement system we have to apply the security
+Q).how can we apply the security?
+A).custom authenticationproviders are needed
+
+Q).how many types of authenticationproviders we have?
+A).daoauthenticationprovider and ldapauthenticationprovider we have
+
+providermanager impliments authenticationmanager build by the authenticationmanagerbuilder
+authenticationmanagerbuilder will builds the authenticationmanager that authenticationmanager has one method called authenticate
+
+
+
+
+
+
+
+

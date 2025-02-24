@@ -8,7 +8,6 @@ import com.medilab.preclinic.model.MedilabUser;
 
 
 public interface MediUserRepository extends JpaRepository<MedilabUser, Integer> {
-
-	@Query(name = "findUserByEmail",value = "from MedilabUser user where user.email=:email")
+	@Query(name = "findUserByEmail", value = "from MedilabUser user where user.email=:email")
 	public MedilabUser findUserByEmail(@Param("email") String email);
 }

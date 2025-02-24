@@ -1,7 +1,6 @@
 package com.medilab.preclinic.controller;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -15,22 +14,20 @@ public class MedilabDashboradController {
 	@RequestMapping
 	public String viewMedilabDashborad() {
 		System.out.println("i am in dashboard");
-		Authentication authnResponse = SecurityContextHolder.getContext().getAuthentication();
-		//UserDetails userDetails = (UserDetails) authnResponse.getPrincipal();
-		System.out.println("=============================");
-		System.out.println("logged in user details are:\t");
-		System.out.println("user name:\t"+authnResponse.getPrincipal());
-		System.out.println("password is:\t"+authnResponse.getCredentials());
-		System.out.println("authorities are:\t");
-		for(GrantedAuthority ga : authnResponse.getAuthorities()) {
-			System.out.println(ga.getAuthority());
-		}
+		Authentication authenticationResponse = SecurityContextHolder.getContext().getAuthentication();
+		//UserDetails userDetails = authenticationResponse.getPrincipal();
+		System.out.println("============logged in user details========");
+		System.out.println("username :\t"+authenticationResponse.getPrincipal()); //principal = username
+		System.out.println("password :\t"+authenticationResponse.getCredentials()); //credentails = password
+		authenticationResponse.getAuthorities().stream().forEach(authority ->{
+			System.out.println("authority :\t"+authority);
+		});
 		
-		WebAuthenticationDetails webAuthDetails = (WebAuthenticationDetails) authnResponse.getDetails();
-		String remoteAddress = webAuthDetails.getRemoteAddress();
+		//find the ip address of logged in user
+		WebAuthenticationDetails webAuthenticationDetails = (WebAuthenticationDetails) authenticationResponse.getDetails();
+		String remoteAddress = webAuthenticationDetails.getRemoteAddress();
 		System.out.println("user logged in from machine:\t"+remoteAddress);
 		
-		System.out.println("=============================");
 		return "dashboard";
 	}
 }

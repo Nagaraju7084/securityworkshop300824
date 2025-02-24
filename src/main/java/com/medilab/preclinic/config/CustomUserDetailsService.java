@@ -24,20 +24,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		MedilabUser databaseUser = userRepository.findUserByEmail(username);
-		//lets prepare userdetails but userdetails is an interface so use implementation class i.e. user
-		//so prepare user
 		List<SimpleGrantedAuthority> authoritiesList = new ArrayList<>();
 		UserRole userRole = databaseUser.getRole();
 		authoritiesList.add(new SimpleGrantedAuthority(userRole.getName()));
-		
 		return new User(databaseUser.getEmail(), databaseUser.getPassword(), authoritiesList); //here user is the implementation class of userdetails
 	}
 
 }
-
-
-//we know the that authenticationprovider delegates the responsibility
-//of finding the user in the system to userdetailservice
-//so create customuserdetailsservice which will go to our database and get the data
-//so, our customuserdetailsservice class should implements userdetailsservice so that
-//a loaduserbyusername method will be available to our class

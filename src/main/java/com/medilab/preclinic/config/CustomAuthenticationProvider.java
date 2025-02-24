@@ -9,30 +9,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Component //by using this annotation, ioc will auto detect the class and inject the object
+@Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 	
 	@Autowired
-	private PasswordEncoder passwordEncoder; //we exposed as bean in the securityconfig class
+	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String userName = authentication.getName();
 		System.out.println("loggedin username is:\t" + userName);
-		Authentication authenticationResponse = null; //authentication is an interface, usernameandpassworduathenticationtoken is the implementation class
-		//whatever the user we entered in the form/ui form that user will be loaded here by using loaduserbyusername method
+		Authentication authenticationResponse = null;
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
-		//prepare authentication object this decision not only consider only user but also
-		//consider password coming from the database as well
-		if(userDetails != null) { //we have to verify the user entered password with the password coming from the userdetails(database password)
+		if(userDetails != null) {
 			boolean isPasswordMatched = passwordEncoder.matches(String.valueOf(authentication.getCredentials()), userDetails.getPassword());
 			System.out.println("does authentication success?:\t" + isPasswordMatched);
-			if(isPasswordMatched) { //if password is matching i.e. user entered password == password coming from the userdetails(database password)
-				//then prepare the authentication object as response object with the authorities
-				//authentication is an interface, usernameandpassworduathenticationtoken is the implementation class so prepare it
+			if(isPasswordMatched) {
 				authenticationResponse = new UsernamePasswordAuthenticationToken(userName, null, userDetails.getAuthorities());
 			}
 		}
@@ -41,10 +36,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		// TODO Auto-generated method stub
-		return true; //we can make it as true by default because our customauthenticatprovider supports the authentication so true
-		//if we make it as false, the authenticate method willn't execute for sure
-		//and also using this authentication parameter we can know what type of authentication it is
+		return true;
 	}
 
 }

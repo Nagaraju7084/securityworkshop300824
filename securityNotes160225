@@ -233,9 +233,12 @@ providermanager impliments authenticationmanager build by the authenticationmana
 authenticationmanagerbuilder will builds the authenticationmanager that authenticationmanager has one method called authenticate
 
 
+===================240225
+application users and passwords :
 
-
-
+peterk/12345
+charles@gmail.com/charles
+mike@gmail.com/mike
 
 
 
